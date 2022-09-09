@@ -12,7 +12,7 @@ import math
 
 # rgb color
 GREY = (128, 128, 128)  # BOJA POZADINE
-GOLD = (255, 215, 0)  # IGRAC 2
+ROSEGOLD = (183, 136, 110)  # IGRAC 2
 BLACK = (0, 0, 0)  # IGRAC 1
 WHITE = (255, 255, 255)  # PRAZNO POLJE
 
@@ -75,10 +75,21 @@ def winning_move(board, piece):
 def draw_board(board):
     for c in range(COLUMN_COUNT):
         for r in range(ROW_COUNT):
-            pygame.draw.rect(screen, GREY, (c*SQUARESIZE, r *
-                             SQUARESIZE+SQUARESIZE, SQUARESIZE, SQUARESIZE))
+            pygame.draw.rect(
+                screen, GREY, (c*SQUARESIZE, r * SQUARESIZE+SQUARESIZE, SQUARESIZE, SQUARESIZE))
             pygame.draw.circle(
                 screen, WHITE, (int(c*SQUARESIZE+SQUARESIZE/2), int(r*SQUARESIZE+SQUARESIZE+SQUARESIZE/2)), radius)
+
+    for c in range(COLUMN_COUNT):
+        for r in range(ROW_COUNT):
+            if board[r][c] == 1:
+                pygame.draw.circle(
+                    screen, BLACK, (int(c*SQUARESIZE+SQUARESIZE/2), height - int(r*SQUARESIZE+SQUARESIZE/2)), radius)
+            elif board[r][c] == 2:
+                pygame.draw.circle(
+                    screen, ROSEGOLD, (int(c*SQUARESIZE+SQUARESIZE/2), height - int(r*SQUARESIZE+SQUARESIZE/2)), radius)
+
+    pygame.display.update()
 
 
 board = create_board()
@@ -108,10 +119,14 @@ while not game_over:
             sys.exit()
 
         if event.type == pygame.MOUSEBUTTONDOWN:
-            continue
+            # print(event.pos)
             # Ask player 1 for input
             if turn == 0:
-                col = int(input("Player 1 Make your selection (0-6):"))
+                posx = event.pos[0]
+                col = int(math.floor(posx/SQUARESIZE))
+
+                # if turn == 0:
+                # col = int(input("Player 1 Make your selection (0-6):"))
 
                 if is_valid_location(board, col):
                     row = get_next_open_row(board, col)
@@ -121,9 +136,11 @@ while not game_over:
                         print("PLAYER 1 WINS!")
                         game_over = True
 
-            # Ask player 2 for input
+                # Ask player 2 for input
             else:
-                col = int(input("Player 2 Make your selection (0-6):"))
+                posx = event.pos[0]
+                col = int(math.floor(posx/SQUARESIZE))
+                # col = int(input("Player 2 Make your selection (0-6):"))
 
                 if is_valid_location(board, col):
                     row = get_next_open_row(board, col)
@@ -134,6 +151,7 @@ while not game_over:
                         game_over = True
 
             print_board(board)
+            draw_board(board)
 
             # izmjena izmedju prvog i drugog igraca
             turn += 1
