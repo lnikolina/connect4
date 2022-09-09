@@ -1,4 +1,5 @@
 import ntpath
+from select import select
 import numpy as np
 import pygame
 import sys
@@ -17,4 +18,7 @@ turn = 0
 while not game_over:
     # Ask player 1 for input
     if turn == 0:
-        slection = input("Player 1 Make your selection (o-6):")
+        selection = int(input("Player 1 Make your selection (0-6):"))
+
+        print(selection)
+        print(type(selection))
