@@ -22,3 +22,10 @@ while not game_over:
 
         print(selection)
         print(type(selection))
+
+    # Ask player 2 for input
+    else:
+        selection = int(input("Player 2 Make your selection (0-6):"))
+
+    turn += 1
+    turn = turn % 2
