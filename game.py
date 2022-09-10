@@ -11,6 +11,8 @@ YELLOW = (255, 255, 0)  # drugi igrac
 ROW_COUNT = 6
 COLUMN_COUNT = 7
 
+# Link to Pygame Documentation: https: // www.pygame.org/docs/
+
 
 def create_board():
     board = np.zeros((ROW_COUNT, COLUMN_COUNT))

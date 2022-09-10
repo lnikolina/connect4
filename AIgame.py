@@ -1,15 +1,23 @@
+from random import random
 import numpy as np
 import pygame
 import sys
 import math
+import random
 
 GREY = (105, 105, 105)  # boja ploce
 WHITE = (211, 211, 211)  # prazna polja
 VIOLET = (138, 43, 226)  # prvi igrac
 YELLOW = (255, 255, 0)  # drugi igrac
 
+# varijable
 ROW_COUNT = 6
 COLUMN_COUNT = 7
+
+PLAYER = 0
+AI = 1
+
+# funkcije
 
 
 def create_board():
@@ -83,7 +91,6 @@ def draw_board(board):
 board = create_board()
 print_board(board)
 game_over = False
-turn = 0
 
 pygame.init()
 
@@ -101,6 +108,8 @@ draw_board(board)
 pygame.display.update()
 
 myfont = pygame.font.SysFont("monospace", 75)
+
+turn = random.randint(PLAYER, AI)
 
 while not game_over:
 
@@ -122,8 +131,8 @@ while not game_over:
         if event.type == pygame.MOUSEBUTTONDOWN:
             pygame.draw.rect(screen, WHITE, (0, 0, width, SQUARESIZE))
             # print(event.pos)
-            # Ask for Player 1 Input
-            if turn == 0:
+            # FIRST PLAYER
+            if turn == PLAYER:
                 posx = event.pos[0]
                 col = int(math.floor(posx/SQUARESIZE))
 
@@ -136,19 +145,26 @@ while not game_over:
                         screen.blit(label, (40, 10))
                         game_over = True
 
-            # # Ask for Player 2 Input
-            else:
-                posx = event.pos[0]
-                col = int(math.floor(posx/SQUARESIZE))
+                    turn += 1
+                    turn = turn % 2
 
-                if is_valid_location(board, col):
-                    row = get_next_open_row(board, col)
-                    drop_piece(board, row, col, 2)
+                    print_board(board)
+                    draw_board(board)
 
-                    if winning_move(board, 2):
-                        label = myfont.render("Player 2 wins!!", 1, YELLOW)
-                        screen.blit(label, (40, 10))
-                        game_over = True
+    # AI PLAYER
+    if turn == AI and not game_over:
+
+        col = random.randint(0, COLUMN_COUNT-1)
+
+        if is_valid_location(board, col):
+            pygame.time.wait(500)
+            row = get_next_open_row(board, col)
+            drop_piece(board, row, col, 2)
+
+            if winning_move(board, 2):
+                label = myfont.render("haha AI wins!", 1, YELLOW)
+                screen.blit(label, (40, 10))
+                game_over = True
 
             print_board(board)
             draw_board(board)
@@ -156,5 +172,5 @@ while not game_over:
             turn += 1
             turn = turn % 2
 
-            if game_over:
-                pygame.time.wait(3000)
+    if game_over:
+        pygame.time.wait(3000)
